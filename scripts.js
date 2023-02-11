@@ -26,7 +26,8 @@ const gameBoard = (function (doc) {
 
   function checkEqual(a, b, c) {
     if (board[a] !== " " && board[a] === board[b] && board[b] === board[c]) {
-      return board[a];
+      displayMessage(board[a] === player1 ? "1" : "2");
+      return true;
     }
     return false;
   }
@@ -67,46 +68,14 @@ const gameBoard = (function (doc) {
   }
 
   function hasWon() {
-    let won = checkEqual(1, 2, 3);
-    if (won !== false) {
-      displayMessage(won === player1 ? "1" : "2");
-      return true;
-    }
-    won = checkEqual(4, 5, 6);
-    if (won !== false) {
-      displayMessage(won === player1 ? "1" : "2");
-      return true;
-    }
-    won = checkEqual(7, 8, 9);
-    if (won !== false) {
-      displayMessage(won === player1 ? "1" : "2");
-      return true;
-    }
-    won = checkEqual(1, 4, 7);
-    if (won !== false) {
-      displayMessage(won === player1 ? "1" : "2");
-      return true;
-    }
-    won = checkEqual(2, 5, 8);
-    if (won !== false) {
-      displayMessage(won === player1 ? "1" : "2");
-      return true;
-    }
-    won = checkEqual(3, 6, 9);
-    if (won !== false) {
-      displayMessage(won === player1 ? "1" : "2");
-      return true;
-    }
-    won = checkEqual(1, 5, 9);
-    if (won !== false) {
-      displayMessage(won === player1 ? "1" : "2");
-      return true;
-    }
-    won = checkEqual(3, 5, 7);
-    if (won !== false) {
-      displayMessage(won === player1 ? "1" : "2");
-      return true;
-    }
+    if(checkEqual(1, 2, 3)) return true;
+    if(checkEqual(4,5,6)) return true;
+    if(checkEqual(7,8,9)) return true;
+    if(checkEqual(1, 4,7)) return true;
+    if(checkEqual(2,5,8)) return true;
+    if(checkEqual(3,6,9)) return true;
+    if(checkEqual(1, 5,9)) return true;
+    if(checkEqual(3,5,7)) return true;
     return false;
   }
 
@@ -141,7 +110,9 @@ function handleBoardEvent(event) {
     const child = event.target.closest(".board-key");
     if (child) {
       gameBoard.updateBoard(child.getAttribute("id"));
-      gameBoard.hasWon();
+      if(gameBoard.hasWon()){
+        return;
+      }
       if (gameBoard.isBoardFilled()) {
         displayMessage(null);
       }

@@ -55,3 +55,7 @@ button{
     gap:2rem;
     border-radius: 1rem;
   }
+
+.board-key{
+    font-size: 4rem;
+}
