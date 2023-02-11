@@ -54,13 +54,15 @@ const gameBoard = (function (doc) {
   }
 
   function updateBoard(id) {
-    const b = doc.querySelector(`#${id}`);
-    b.textContent = move;
-    board[id[1]] = move;
-    if (move === "O") {
-      move = "X";
-    } else {
-      move = "O";
+    if (board[id[1]] === " ") {
+      const b = doc.querySelector(`#${id}`);
+      b.textContent = move;
+      board[id[1]] = move;
+      if (move === "O") {
+        move = "X";
+      } else {
+        move = "O";
+      }
     }
   }
 
