@@ -1,12 +1,15 @@
 const boardDiv = document.querySelector("#board");
 const mO = document.querySelector("#mO");
 const mX = document.querySelector("#mX");
+const selectFirstMove = document.querySelector("#select-first-move");
 const okButton = document.querySelector("#okButton");
 const okButtonDiv = document.querySelector(".okButtonDiv");
 const okButtonText = document.querySelector("#okButtonText");
 const newGame = document.querySelector("#new-game");
+let canClick = true;
 
 function displayMessage(winner) {
+  canClick = false;
   if (!!winner === false) {
     okButtonText.textContent = `The game is a draw`;
     okButtonDiv.style.display = "flex";
@@ -44,10 +47,10 @@ const gameBoard = (function (doc) {
       const b = doc.querySelector(`#b${i}`);
       b.textContent = board[i];
     }
-    const moveO = doc.querySelector("#mO");
-    const moveX = doc.querySelector("#mX");
-    moveO.style.display = "block";
-    moveX.style.display = "block";
+    okButtonDiv.style.display = "none";
+    mO.style.display = "block";
+    mX.style.display = "block";
+    selectFirstMove.style.display = "block";
   }
 
   function updateBoard(id) {
@@ -120,6 +123,7 @@ const gameBoard = (function (doc) {
 })(document);
 
 function createNewGame() {
+  canClick = true;
   gameBoard.setInitialMove("");
   gameBoard.initBoard();
   gameBoard.displayBoard();
@@ -131,22 +135,23 @@ function removeMessage() {
 }
 
 function handleBoardEvent(event) {
-  const child = event.target.closest(".board-key");
-  if (child) {
-    gameBoard.updateBoard(child.getAttribute("id"));
-    gameBoard.hasWon();
-    if (gameBoard.isBoardFilled()) {
-      displayMessage(null);
+  if (canClick) {
+    const child = event.target.closest(".board-key");
+    if (child) {
+      gameBoard.updateBoard(child.getAttribute("id"));
+      gameBoard.hasWon();
+      if (gameBoard.isBoardFilled()) {
+        displayMessage(null);
+      }
     }
   }
 }
 
-function moveHandler(event) {
+function firstMoveHandler(event) {
   const child = event.target;
-  const moveO = document.querySelector("#mO");
-  const moveX = document.querySelector("#mX");
-  moveO.style.display = "none";
-  moveX.style.display = "none";
+  mO.style.display = "none";
+  mX.style.display = "none";
+  selectFirstMove.style.display = "none";
   if (child.getAttribute("id") === "mO") {
     gameBoard.setInitialMove("O");
   } else {
@@ -155,8 +160,8 @@ function moveHandler(event) {
 }
 
 boardDiv.addEventListener("click", handleBoardEvent);
-mO.addEventListener("click", moveHandler);
-mX.addEventListener("click", moveHandler);
+mO.addEventListener("click", firstMoveHandler);
+mX.addEventListener("click", firstMoveHandler);
 newGame.addEventListener("click", createNewGame);
 okButton.addEventListener("click", removeMessage);
 

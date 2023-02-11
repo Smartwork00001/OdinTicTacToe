@@ -46,7 +46,7 @@ button{
 .okButtonDiv {
     position:fixed;
     top:20%;
-    left:47%;
+    left:77%;
     background-color: aliceblue;
     display: none;
     flex-direction: column;
