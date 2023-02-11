@@ -6,11 +6,12 @@ const okButtonDiv = document.querySelector(".okButtonDiv");
 const okButtonText = document.querySelector("#okButtonText");
 const newGame = document.querySelector("#new-game");
 
-function removeMessage() {
-  okButtonDiv.style.display = "none";
-}
-
 function displayMessage(winner) {
+  if (!!winner === false) {
+    okButtonText.textContent = `The game is a draw`;
+    okButtonDiv.style.display = "flex";
+    return;
+  }
   okButtonText.textContent = `Player ${winner} has won`;
   okButtonDiv.style.display = "flex";
 }
@@ -18,9 +19,7 @@ function displayMessage(winner) {
 const gameBoard = (function (doc) {
   const board = [];
   let move;
-  let turn = 1;
   let player1;
-  let player2;
 
   function checkEqual(a, b, c) {
     if (board[a] !== " " && board[a] === board[b] && board[b] === board[c]) {
@@ -32,7 +31,6 @@ const gameBoard = (function (doc) {
   function setInitialMove(m) {
     move = m;
     player1 = m;
-    player2 = m === "O" ? "X" : "O";
   }
 
   function initBoard() {
@@ -55,6 +53,7 @@ const gameBoard = (function (doc) {
   function updateBoard(id) {
     const b = doc.querySelector(`#${id}`);
     b.textContent = move;
+    board[id[1]] = move;
     if (move === "O") {
       move = "X";
     } else {
@@ -106,7 +105,18 @@ const gameBoard = (function (doc) {
     return false;
   }
 
-  return { initBoard, displayBoard, updateBoard, setInitialMove, hasWon };
+  function isBoardFilled() {
+    return !board.some((b) => b === " ");
+  }
+
+  return {
+    initBoard,
+    displayBoard,
+    updateBoard,
+    setInitialMove,
+    hasWon,
+    isBoardFilled,
+  };
 })(document);
 
 function createNewGame() {
@@ -115,12 +125,18 @@ function createNewGame() {
   gameBoard.displayBoard();
 }
 
+function removeMessage() {
+  okButtonDiv.style.display = "none";
+  createNewGame();
+}
+
 function handleBoardEvent(event) {
   const child = event.target.closest(".board-key");
   if (child) {
     gameBoard.updateBoard(child.getAttribute("id"));
-    if (gameBoard.hasWon()) {
-      createNewGame();
+    gameBoard.hasWon();
+    if (gameBoard.isBoardFilled()) {
+      displayMessage(null);
     }
   }
 }
